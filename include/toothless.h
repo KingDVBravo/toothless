@@ -1,0 +1,4 @@
+struct Kernel
+{
+    /* data */
+};
