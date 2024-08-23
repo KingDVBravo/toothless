@@ -10,25 +10,26 @@ namespace tprocess
     private:
         Kernel kernel;
     public:
-        ProcessManager(Kernel kernel) {}
+        ProcessManager(Kernel kernel);
+        void RoundRobin();
     };
 
-    /* Process  */
+    /* Process */
     struct PCB 
     {
-        uint16_t ax; /* accumalator register */
+        uint8_t ax; /* accumalator register */
         uint16_t bx; /* base register */
         uint16_t cx; /* count register */
-        uint16_t dx;
-        uint16_t sp;
-        uint16_t bp;
-        uint16_t si;
-        uint16_t di;
+        uint16_t dx; /* data register */
+        uint16_t sp; /* stack pointer */
+        uint16_t bp; /* base pointer */
+        uint16_t si; /* source index */
+        uint16_t di; /* destination index */
 
-        PCB(Process p);
+        PCB(Process* p);
     };
 
-    enum ContextState
+    enum ProcessState
     {
         Ready,
         Running,
@@ -45,17 +46,17 @@ namespace tprocess
         std::vector<uint32_t> stack; 
         std::vector<uint32_t> data;
         std::vector<uint32_t> heap; // temporary before addition of memory
-        /* size */
-        size_t queueSZ;
-        size_t stackSZ;
-        size_t dataSZ;
-        size_t heapSZ;
-        /* Context data */
-        uint16_t pc;
-        uint32_t processID;
-        ContextState state;
+        uint16_t processID;
+        ProcessState state;
         PCB pcb;
     public:
-        Process(uint32_t id) :pcb(*this) ,state(Ready), processID(id){}
+        /* Context data */
+        uint16_t getprocessID();
+        ProcessState getstate();
+        inline std::vector<uint16_t> getpc_queue(){ return this->pc_queue; };
+        inline std::vector<uint32_t> getstack(){ return this->stack; }; 
+        inline std::vector<uint32_t> getdata(){ return this->data; };
+        inline std::vector<uint32_t> getheap(){ return this->heap; };
+        PCB pcb;
     }; 
 }
